@@ -32,14 +32,19 @@
             };
             let messageText = "";
             const openMoranChat = () => {
-                const baseUrl = "https://line.me/R/oaMessage/@378zbktg/";
+                const fallbackUrl = "https://line.me/R/ti/p/@378zbktg";
+                const httpBase = "https://line.me/R/oaMessage/@378zbktg/";
+                const lineBase = "line://oaMessage/@378zbktg/";
                 const url = messageText
-                    ? `${baseUrl}?text=${encodeURIComponent(messageText)}`
-                    : "https://line.me/R/ti/p/@378zbktg";
+                    ? `${lineBase}?text=${encodeURIComponent(messageText)}`
+                    : fallbackUrl;
+                const httpUrl = messageText
+                    ? `${httpBase}?text=${encodeURIComponent(messageText)}`
+                    : fallbackUrl;
                 if (window.liff) {
                     liff.openWindow({ url, external: true });
                 } else {
-                    window.location.href = url;
+                    window.location.href = httpUrl;
                 }
             };
             // 1. 初始化 LIFF
@@ -92,14 +97,19 @@
         if (closeBtn) {
             closeBtn.textContent = '打開 moran 聊天室';
             closeBtn.addEventListener('click', () => {
-                const baseUrl = "https://line.me/R/oaMessage/@378zbktg/";
+                const fallbackUrl = "https://line.me/R/ti/p/@378zbktg";
+                const httpBase = "https://line.me/R/oaMessage/@378zbktg/";
+                const lineBase = "line://oaMessage/@378zbktg/";
                 const url = messageText
-                    ? `${baseUrl}?text=${encodeURIComponent(messageText)}`
-                    : "https://line.me/R/ti/p/@378zbktg";
+                    ? `${lineBase}?text=${encodeURIComponent(messageText)}`
+                    : fallbackUrl;
+                const httpUrl = messageText
+                    ? `${httpBase}?text=${encodeURIComponent(messageText)}`
+                    : fallbackUrl;
                 if (window.liff) {
                     liff.openWindow({ url, external: true });
                 } else {
-                    window.location.href = url;
+                    window.location.href = httpUrl;
                 }
             });
         }
