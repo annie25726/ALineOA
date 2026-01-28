@@ -60,9 +60,13 @@
                     return;
                 }
 
-                // 4. 依參數送出關鍵字，觸發後台自動回應
-                if (myParam === "annie12345678") {
-                    const keyword = "annie12345678";
+                // 4. 依參數送出對應關鍵字，觸發後台自動回應
+                const keywordMap = {
+                    annie12345678: "annie12345678",
+                    annie99999999: "annie99999999"
+                };
+                const keyword = keywordMap[myParam];
+                if (keyword) {
                     setStatus("正在送出關鍵字...");
                     try {
                         await liff.sendMessages([{
