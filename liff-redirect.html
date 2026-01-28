@@ -39,6 +39,7 @@
                     window.location.href = fallbackUrl;
                 }
             };
+            const BACKEND_URL = "https://YOUR-RENDER-SERVICE.onrender.com";
             // 1. 初始化 LIFF
             await liff.init({ liffId: "2008731710-UlxVqq0d" });
             setDebug(`env: inClient=${liff.isInClient()} loggedIn=${liff.isLoggedIn()}`);
@@ -57,29 +58,33 @@
                 const myParam = urlParams.get('ref'); 
                 setDebug(`ref=${myParam || "(none)"}`);
 
-                // 3. 依參數送出對應關鍵字，觸發後台自動回應
-                const keywordMap = {
-                    annie12345678: "annie12345678",
-                    annie99999999: "annie99999999"
-                };
-                const keyword = keywordMap[myParam];
-                if (keyword) {
-                    setStatus("正在送出關鍵字...");
+                // 3. 呼叫後端推播對應訊息
+                if (myParam) {
+                    setStatus("正在推播訊息...");
                     try {
-                        await liff.sendMessages([{
-                            type: 'text',
-                            text: keyword
-                        }]);
-                        setStatus("關鍵字已送出，正在導向 moran OA...");
-                        setDebug(`sent=${keyword}`);
+                        const profile = await liff.getProfile();
+                        const res = await fetch(`${BACKEND_URL}/api/push`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                userId: profile.userId,
+                                ref: myParam
+                            })
+                        });
+                        const data = await res.json().catch(() => ({}));
+                        if (!res.ok) {
+                            throw new Error(data.error || "push failed");
+                        }
+                        setStatus("推播已送出，正在導向 moran OA...");
+                        setDebug(`pushed=${myParam}`);
                     } catch (err) {
                         console.error("傳送失敗", err);
-                        setStatus("關鍵字送出失敗，請確認已加好友並開啟 chat_message.write 權限");
+                        setStatus("推播失敗，請確認已加好友與後端設定");
                         setDebug(`error=${err && err.message ? err.message : String(err)}`);
                     }
                 } else {
                     setStatus("參數不符，仍將導向 moran OA...");
-                    setDebug("no keyword mapping");
+                    setDebug("no ref parameter");
                 }
                 setStatus("10 秒後導向 moran OA...");
                 setTimeout(openMoranChat, 10000);
