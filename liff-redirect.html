@@ -23,6 +23,14 @@
             const showClose = () => {
                 if (closeBtn) closeBtn.style.display = 'inline-block';
             };
+            const openMoranChat = () => {
+                const url = "https://line.me/R/ti/p/@378zbktg";
+                if (window.liff) {
+                    liff.openWindow({ url, external: true });
+                } else {
+                    window.location.href = url;
+                }
+            };
             // 1. 初始化 LIFF
             await liff.init({ liffId: "2008731710-UlxVqq0d" });
 
@@ -46,7 +54,8 @@
                             type: 'text',
                             text: '你好我是第一個anie12345678進來的' // 這會觸發你的關鍵字回應
                         }]);
-                        setStatus("訊息已送出，請回到聊天室查看");
+                        setStatus("訊息已送出，正在開啟 moran 聊天室...");
+                        openMoranChat();
                         showClose();
                     } catch (err) {
                         console.error("傳送失敗", err);
@@ -64,9 +73,12 @@
     <script>
         const closeBtn = document.getElementById('closeBtn');
         if (closeBtn) {
+            closeBtn.textContent = '打開 moran 聊天室';
             closeBtn.addEventListener('click', () => {
-                if (window.liff && liff.isInClient()) {
-                    liff.closeWindow();
+                if (window.liff) {
+                    liff.openWindow({ url: "https://line.me/R/ti/p/@378zbktg", external: true });
+                } else {
+                    window.location.href = "https://line.me/R/ti/p/@378zbktg";
                 }
             });
         }
