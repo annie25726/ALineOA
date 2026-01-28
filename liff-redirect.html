@@ -10,13 +10,18 @@
     <div style="text-align: center; margin-top: 50px; font-family: sans-serif;">
         <p>正在為您綁定專屬參數，請稍候...</p>
         <p id="status" style="color: #666; font-size: 14px;"></p>
+        <button id="closeBtn" style="display:none; margin-top: 12px; padding: 8px 14px;">返回聊天室</button>
     </div>
 
     <script>
         async function main() {
             const statusEl = document.getElementById('status');
+            const closeBtn = document.getElementById('closeBtn');
             const setStatus = (msg) => {
                 if (statusEl) statusEl.textContent = msg;
+            };
+            const showClose = () => {
+                if (closeBtn) closeBtn.style.display = 'inline-block';
             };
             // 1. 初始化 LIFF
             await liff.init({ liffId: "2008731710-UlxVqq0d" });
@@ -41,18 +46,30 @@
                             type: 'text',
                             text: '你好我是第一個anie12345678進來的' // 這會觸發你的關鍵字回應
                         }]);
-                        setStatus("訊息已送出，將回到聊天室...");
-                        setTimeout(() => liff.closeWindow(), 800);
+                        setStatus("訊息已送出，請回到聊天室查看");
+                        showClose();
                     } catch (err) {
                         console.error("傳送失敗", err);
                         setStatus("傳送失敗，請先加入好友並確認 chat_message.write 權限");
+                        showClose();
                     }
                 } else {
                     setStatus("參數不符，請確認連結");
+                    showClose();
                 }
             }
         }
         main();
+    </script>
+    <script>
+        const closeBtn = document.getElementById('closeBtn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                if (window.liff && liff.isInClient()) {
+                    liff.closeWindow();
+                }
+            });
+        }
     </script>
 </body>
 </html>
