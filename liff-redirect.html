@@ -18,6 +18,7 @@
     </div>
 
     <script>
+        let messageText = "";
         async function main() {
             const statusEl = document.getElementById('status');
             const prefillEl = document.getElementById('prefill');
@@ -30,11 +31,10 @@
                 if (copyBtn) copyBtn.style.display = 'inline-block';
                 if (closeBtn) closeBtn.style.display = 'inline-block';
             };
-            let messageText = "";
             const openMoranChat = () => {
                 const fallbackUrl = "https://line.me/R/ti/p/@378zbktg";
-                const httpBase = "https://line.me/R/oaMessage/@378zbktg/";
-                const lineBase = "line://oaMessage/@378zbktg/";
+                const httpBase = "https://line.me/R/oaMessage/@378zbktg";
+                const lineBase = "line://oaMessage/@378zbktg";
                 const url = messageText
                     ? `${lineBase}?text=${encodeURIComponent(messageText)}`
                     : fallbackUrl;
@@ -109,8 +109,8 @@
             closeBtn.textContent = '打開 moran 聊天室';
             closeBtn.addEventListener('click', () => {
                 const fallbackUrl = "https://line.me/R/ti/p/@378zbktg";
-                const httpBase = "https://line.me/R/oaMessage/@378zbktg/";
-                const lineBase = "line://oaMessage/@378zbktg/";
+                const httpBase = "https://line.me/R/oaMessage/@378zbktg";
+                const lineBase = "line://oaMessage/@378zbktg";
                 const url = messageText
                     ? `${lineBase}?text=${encodeURIComponent(messageText)}`
                     : fallbackUrl;
