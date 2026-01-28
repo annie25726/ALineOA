@@ -50,7 +50,17 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 const myParam = urlParams.get('ref'); 
 
-                // 3. 依參數送出關鍵字，觸發後台自動回應
+                // 3. 確認目前是不是在 OA 一對一聊天室開啟
+                const context = liff.getContext ? liff.getContext() : null;
+                const contextType = context && context.type ? context.type : "unknown";
+                if (contextType !== "utou") {
+                    setStatus("請從 moran OA 聊天室開啟此連結，避免送到其他聊天室");
+                    openMoranChat();
+                    showActions();
+                    return;
+                }
+
+                // 4. 依參數送出關鍵字，觸發後台自動回應
                 if (myParam === "annie12345678") {
                     const keyword = "annie12345678";
                     setStatus("正在送出關鍵字...");
@@ -67,7 +77,7 @@
                 } else {
                     setStatus("參數不符，仍將導向 moran OA...");
                 }
-                openMoranChat();
+                setTimeout(openMoranChat, 300);
                 showActions();
             }
         }
