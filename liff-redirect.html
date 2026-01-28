@@ -27,7 +27,7 @@
             const openMoranChat = () => {
                 const baseUrl = "https://line.me/R/oaMessage/@378zbktg/";
                 const url = messageText
-                    ? `${baseUrl}?${encodeURIComponent(messageText)}`
+                    ? `${baseUrl}?text=${encodeURIComponent(messageText)}`
                     : "https://line.me/R/ti/p/@378zbktg";
                 if (window.liff) {
                     liff.openWindow({ url, external: true });
@@ -72,13 +72,13 @@
                 if (window.liff) {
                     const baseUrl = "https://line.me/R/oaMessage/@378zbktg/";
                     const url = messageText
-                        ? `${baseUrl}?${encodeURIComponent(messageText)}`
+                        ? `${baseUrl}?text=${encodeURIComponent(messageText)}`
                         : "https://line.me/R/ti/p/@378zbktg";
                     liff.openWindow({ url, external: true });
                 } else {
                     const baseUrl = "https://line.me/R/oaMessage/@378zbktg/";
                     const url = messageText
-                        ? `${baseUrl}?${encodeURIComponent(messageText)}`
+                        ? `${baseUrl}?text=${encodeURIComponent(messageText)}`
                         : "https://line.me/R/ti/p/@378zbktg";
                     window.location.href = url;
                 }
