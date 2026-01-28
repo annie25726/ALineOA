@@ -10,25 +10,19 @@
     <div style="text-align: center; margin-top: 50px; font-family: sans-serif;">
         <p>正在為您綁定專屬參數，請稍候...</p>
         <p id="status" style="color: #666; font-size: 14px;"></p>
-        <p id="prefill" style="display:none; margin-top: 8px; color: #333;"></p>
         <div style="margin-top: 8px;">
-            <button id="copyBtn" style="display:none; padding: 6px 12px;">複製開頭語</button>
-            <button id="closeBtn" style="display:none; margin-left: 8px; padding: 6px 12px;">打開 moran 聊天室</button>
+            <button id="closeBtn" style="display:none; padding: 6px 12px;">打開 moran 聊天室</button>
         </div>
     </div>
 
     <script>
-        let messageText = "";
         async function main() {
             const statusEl = document.getElementById('status');
-            const prefillEl = document.getElementById('prefill');
-            const copyBtn = document.getElementById('copyBtn');
             const closeBtn = document.getElementById('closeBtn');
             const setStatus = (msg) => {
                 if (statusEl) statusEl.textContent = msg;
             };
             const showActions = () => {
-                if (copyBtn) copyBtn.style.display = 'inline-block';
                 if (closeBtn) closeBtn.style.display = 'inline-block';
             };
             const openMoranChat = () => {
@@ -59,7 +53,6 @@
                 // 3. 依參數送出關鍵字，觸發後台自動回應
                 if (myParam === "annie12345678") {
                     const keyword = "annie12345678";
-                    messageText = "你好我是第一個anie12345678進來的";
                     setStatus("正在送出關鍵字...");
                     try {
                         await liff.sendMessages([{
@@ -74,10 +67,6 @@
                 } else {
                     setStatus("參數不符，仍將導向 moran OA...");
                 }
-                if (messageText && prefillEl) {
-                    prefillEl.style.display = 'block';
-                    prefillEl.textContent = `開頭語：${messageText}`;
-                }
                 openMoranChat();
                 showActions();
             }
@@ -85,19 +74,7 @@
         main();
     </script>
     <script>
-        const copyBtn = document.getElementById('copyBtn');
         const closeBtn = document.getElementById('closeBtn');
-        if (copyBtn) {
-            copyBtn.addEventListener('click', async () => {
-                if (!messageText) return;
-                try {
-                    await navigator.clipboard.writeText(messageText);
-                    copyBtn.textContent = '已複製';
-                } catch {
-                    copyBtn.textContent = '無法複製';
-                }
-            });
-        }
         if (closeBtn) {
             closeBtn.textContent = '打開 moran 聊天室';
             closeBtn.addEventListener('click', () => {
