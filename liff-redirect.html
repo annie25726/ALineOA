@@ -39,33 +39,22 @@
                 liff.login();
             } else {
                 if (!liff.isInClient()) {
-                    setStatus("請用 LINE App 開啟此連結");
+                    setStatus("請用 LINE App 開啟此連結，將導向 moran OA");
+                    openMoranChat();
                     return;
                 }
                 // 2. 取得網址參數
                 const urlParams = new URLSearchParams(window.location.search);
                 const myParam = urlParams.get('ref'); 
 
-                // 3. 邏輯判斷：如果有特定參數，就發送對應訊息
+                // 3. 不論從哪個聊天室開啟，一律導向 moran OA
                 if (myParam === "annie12345678") {
-                    setStatus("正在傳送訊息...");
-                    try {
-                        await liff.sendMessages([{
-                            type: 'text',
-                            text: '你好我是第一個anie12345678進來的' // 這會觸發你的關鍵字回應
-                        }]);
-                        setStatus("訊息已送出，正在開啟 moran 聊天室...");
-                        openMoranChat();
-                        showClose();
-                    } catch (err) {
-                        console.error("傳送失敗", err);
-                        setStatus("傳送失敗，請先加入好友並確認 chat_message.write 權限");
-                        showClose();
-                    }
+                    setStatus("正在導向 moran OA...");
                 } else {
-                    setStatus("參數不符，請確認連結");
-                    showClose();
+                    setStatus("參數不符，仍將導向 moran OA...");
                 }
+                openMoranChat();
+                showClose();
             }
         }
         main();
