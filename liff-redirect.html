@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>正在導向至 LINE OA...</title>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+    <div style="text-align: center; margin-top: 50px; font-family: sans-serif;">
+        <p>正在為您綁定專屬參數，請稍候...</p>
+    </div>
+
+    <script>
+        async function main() {
+            // 1. 初始化 LIFF
+            await liff.init({ liffId: "2008731710-UlxVqq0d" });
+
+            if (!liff.isLoggedIn()) {
+                liff.login();
+            } else {
+                // 2. 取得網址參數
+                const urlParams = new URLSearchParams(window.location.search);
+                const myParam = urlParams.get('ref'); 
+
+                // 3. 邏輯判斷：如果有特定參數，就發送對應訊息
+                if (myParam === "annie12345678") {
+                    liff.sendMessages([{
+                        type: 'text',
+                        text: 'annietest' // 這會觸發你的關鍵字回應
+                    }]).then(() => {
+                        liff.closeWindow(); 
+                    }).catch((err) => {
+                        console.error("傳送失敗", err);
+                        alert("請先加入好友，或確認開啟了 chat_message.write 權限");
+                    });
+                } else {
+                    // 如果沒有參數或參數不對，直接關閉視窗回到聊天室
+                    liff.closeWindow();
+                }
+            }
+        }
+        main();
+    </script>
+</body>
+</html>
