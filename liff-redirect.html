@@ -23,8 +23,12 @@
             const showClose = () => {
                 if (closeBtn) closeBtn.style.display = 'inline-block';
             };
+            let messageText = "";
             const openMoranChat = () => {
-                const url = "https://line.me/R/ti/p/@378zbktg";
+                const baseUrl = "https://line.me/R/oaMessage/@378zbktg/";
+                const url = messageText
+                    ? `${baseUrl}?${encodeURIComponent(messageText)}`
+                    : "https://line.me/R/ti/p/@378zbktg";
                 if (window.liff) {
                     liff.openWindow({ url, external: true });
                 } else {
@@ -49,7 +53,8 @@
 
                 // 3. 不論從哪個聊天室開啟，一律導向 moran OA
                 if (myParam === "annie12345678") {
-                    setStatus("正在導向 moran OA...");
+                    messageText = "你好我是第一個anie12345678進來的";
+                    setStatus("正在導向 moran OA，並帶入開頭語...");
                 } else {
                     setStatus("參數不符，仍將導向 moran OA...");
                 }
@@ -65,9 +70,17 @@
             closeBtn.textContent = '打開 moran 聊天室';
             closeBtn.addEventListener('click', () => {
                 if (window.liff) {
-                    liff.openWindow({ url: "https://line.me/R/ti/p/@378zbktg", external: true });
+                    const baseUrl = "https://line.me/R/oaMessage/@378zbktg/";
+                    const url = messageText
+                        ? `${baseUrl}?${encodeURIComponent(messageText)}`
+                        : "https://line.me/R/ti/p/@378zbktg";
+                    liff.openWindow({ url, external: true });
                 } else {
-                    window.location.href = "https://line.me/R/ti/p/@378zbktg";
+                    const baseUrl = "https://line.me/R/oaMessage/@378zbktg/";
+                    const url = messageText
+                        ? `${baseUrl}?${encodeURIComponent(messageText)}`
+                        : "https://line.me/R/ti/p/@378zbktg";
+                    window.location.href = url;
                 }
             });
         }
