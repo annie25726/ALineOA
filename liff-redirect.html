@@ -9,34 +9,46 @@
 <body>
     <div style="text-align: center; margin-top: 50px; font-family: sans-serif;">
         <p>正在為您綁定專屬參數，請稍候...</p>
+        <p id="status" style="color: #666; font-size: 14px;"></p>
     </div>
 
     <script>
         async function main() {
+            const statusEl = document.getElementById('status');
+            const setStatus = (msg) => {
+                if (statusEl) statusEl.textContent = msg;
+            };
             // 1. 初始化 LIFF
             await liff.init({ liffId: "2008731710-UlxVqq0d" });
 
             if (!liff.isLoggedIn()) {
+                setStatus("正在導向登入...");
                 liff.login();
             } else {
+                if (!liff.isInClient()) {
+                    setStatus("請用 LINE App 開啟此連結");
+                    return;
+                }
                 // 2. 取得網址參數
                 const urlParams = new URLSearchParams(window.location.search);
                 const myParam = urlParams.get('ref'); 
 
                 // 3. 邏輯判斷：如果有特定參數，就發送對應訊息
                 if (myParam === "annie12345678") {
-                    liff.sendMessages([{
-                        type: 'text',
-                        text: '你好我是第一個anie12345678進來的' // 這會觸發你的關鍵字回應
-                    }]).then(() => {
-                        liff.closeWindow(); 
-                    }).catch((err) => {
+                    setStatus("正在傳送訊息...");
+                    try {
+                        await liff.sendMessages([{
+                            type: 'text',
+                            text: '你好我是第一個anie12345678進來的' // 這會觸發你的關鍵字回應
+                        }]);
+                        setStatus("訊息已送出，將回到聊天室...");
+                        setTimeout(() => liff.closeWindow(), 800);
+                    } catch (err) {
                         console.error("傳送失敗", err);
-                        alert("請先加入好友，或確認開啟了 chat_message.write 權限");
-                    });
+                        setStatus("傳送失敗，請先加入好友並確認 chat_message.write 權限");
+                    }
                 } else {
-                    // 如果沒有參數或參數不對，直接關閉視窗回到聊天室
-                    liff.closeWindow();
+                    setStatus("參數不符，請確認連結");
                 }
             }
         }
