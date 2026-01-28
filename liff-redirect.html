@@ -10,6 +10,7 @@
     <div style="text-align: center; margin-top: 50px; font-family: sans-serif;">
         <p>正在為您綁定專屬參數，請稍候...</p>
         <p id="status" style="color: #666; font-size: 14px;"></p>
+        <p id="debug" style="color: #999; font-size: 12px; margin-top: 6px;"></p>
         <div style="margin-top: 8px;">
             <button id="closeBtn" style="display:none; padding: 6px 12px;">打開 moran 聊天室</button>
         </div>
@@ -18,9 +19,13 @@
     <script>
         async function main() {
             const statusEl = document.getElementById('status');
+            const debugEl = document.getElementById('debug');
             const closeBtn = document.getElementById('closeBtn');
             const setStatus = (msg) => {
                 if (statusEl) statusEl.textContent = msg;
+            };
+            const setDebug = (msg) => {
+                if (debugEl) debugEl.textContent = msg;
             };
             const showActions = () => {
                 if (closeBtn) closeBtn.style.display = 'inline-block';
@@ -36,6 +41,7 @@
             };
             // 1. 初始化 LIFF
             await liff.init({ liffId: "2008731710-UlxVqq0d" });
+            setDebug(`env: inClient=${liff.isInClient()} loggedIn=${liff.isLoggedIn()}`);
 
             if (!liff.isLoggedIn()) {
                 setStatus("正在導向登入...");
@@ -49,6 +55,7 @@
                 // 2. 取得網址參數
                 const urlParams = new URLSearchParams(window.location.search);
                 const myParam = urlParams.get('ref'); 
+                setDebug(`ref=${myParam || "(none)"}`);
 
                 // 3. 依參數送出對應關鍵字，觸發後台自動回應
                 const keywordMap = {
@@ -64,12 +71,15 @@
                             text: keyword
                         }]);
                         setStatus("關鍵字已送出，正在導向 moran OA...");
+                        setDebug(`sent=${keyword}`);
                     } catch (err) {
                         console.error("傳送失敗", err);
                         setStatus("關鍵字送出失敗，請確認已加好友並開啟 chat_message.write 權限");
+                        setDebug(`error=${err && err.message ? err.message : String(err)}`);
                     }
                 } else {
                     setStatus("參數不符，仍將導向 moran OA...");
+                    setDebug("no keyword mapping");
                 }
                 setTimeout(openMoranChat, 300);
                 showActions();
