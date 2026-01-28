@@ -8,8 +8,8 @@ app.use(cors());
 app.use(express.json());
 
 const keywordMap = {
-  annie12345678: "回覆 A",
-  annie99999999: "回覆 B"
+  annie12345678: "連結1回覆 Aaaaaaaa",
+  annie99999999: "連結2回覆 Bbbbbbbb"
 };
 
 app.get("/", (_req, res) => {
