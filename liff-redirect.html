@@ -10,17 +10,24 @@
     <div style="text-align: center; margin-top: 50px; font-family: sans-serif;">
         <p>正在為您綁定專屬參數，請稍候...</p>
         <p id="status" style="color: #666; font-size: 14px;"></p>
-        <button id="closeBtn" style="display:none; margin-top: 12px; padding: 8px 14px;">返回聊天室</button>
+        <p id="prefill" style="display:none; margin-top: 8px; color: #333;"></p>
+        <div style="margin-top: 8px;">
+            <button id="copyBtn" style="display:none; padding: 6px 12px;">複製開頭語</button>
+            <button id="closeBtn" style="display:none; margin-left: 8px; padding: 6px 12px;">打開 moran 聊天室</button>
+        </div>
     </div>
 
     <script>
         async function main() {
             const statusEl = document.getElementById('status');
+            const prefillEl = document.getElementById('prefill');
+            const copyBtn = document.getElementById('copyBtn');
             const closeBtn = document.getElementById('closeBtn');
             const setStatus = (msg) => {
                 if (statusEl) statusEl.textContent = msg;
             };
-            const showClose = () => {
+            const showActions = () => {
+                if (copyBtn) copyBtn.style.display = 'inline-block';
                 if (closeBtn) closeBtn.style.display = 'inline-block';
             };
             let messageText = "";
@@ -58,28 +65,40 @@
                 } else {
                     setStatus("參數不符，仍將導向 moran OA...");
                 }
+                if (messageText && prefillEl) {
+                    prefillEl.style.display = 'block';
+                    prefillEl.textContent = `開頭語：${messageText}`;
+                }
                 openMoranChat();
-                showClose();
+                showActions();
             }
         }
         main();
     </script>
     <script>
+        const copyBtn = document.getElementById('copyBtn');
         const closeBtn = document.getElementById('closeBtn');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', async () => {
+                if (!messageText) return;
+                try {
+                    await navigator.clipboard.writeText(messageText);
+                    copyBtn.textContent = '已複製';
+                } catch {
+                    copyBtn.textContent = '無法複製';
+                }
+            });
+        }
         if (closeBtn) {
             closeBtn.textContent = '打開 moran 聊天室';
             closeBtn.addEventListener('click', () => {
+                const baseUrl = "https://line.me/R/oaMessage/@378zbktg/";
+                const url = messageText
+                    ? `${baseUrl}?text=${encodeURIComponent(messageText)}`
+                    : "https://line.me/R/ti/p/@378zbktg";
                 if (window.liff) {
-                    const baseUrl = "https://line.me/R/oaMessage/@378zbktg/";
-                    const url = messageText
-                        ? `${baseUrl}?text=${encodeURIComponent(messageText)}`
-                        : "https://line.me/R/ti/p/@378zbktg";
                     liff.openWindow({ url, external: true });
                 } else {
-                    const baseUrl = "https://line.me/R/oaMessage/@378zbktg/";
-                    const url = messageText
-                        ? `${baseUrl}?text=${encodeURIComponent(messageText)}`
-                        : "https://line.me/R/ti/p/@378zbktg";
                     window.location.href = url;
                 }
             });
