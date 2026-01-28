@@ -63,10 +63,21 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 const myParam = urlParams.get('ref'); 
 
-                // 3. 不論從哪個聊天室開啟，一律導向 moran OA
+                // 3. 依參數送出關鍵字，觸發後台自動回應
                 if (myParam === "annie12345678") {
+                    const keyword = "annie12345678";
                     messageText = "你好我是第一個anie12345678進來的";
-                    setStatus("正在導向 moran OA，並帶入開頭語...");
+                    setStatus("正在送出關鍵字...");
+                    try {
+                        await liff.sendMessages([{
+                            type: 'text',
+                            text: keyword
+                        }]);
+                        setStatus("關鍵字已送出，正在導向 moran OA...");
+                    } catch (err) {
+                        console.error("傳送失敗", err);
+                        setStatus("關鍵字送出失敗，請確認已加好友並開啟 chat_message.write 權限");
+                    }
                 } else {
                     setStatus("參數不符，仍將導向 moran OA...");
                 }
